@@ -41,6 +41,36 @@ def delete_user(db: Session, current_user: User, user_id: int):
     return True
 
 
+def update_collaborator(db: Session, current_user: User, user_id: int, **updates):
+    if current_user.role != "gestion":
+        raise PermissionError("Seul le rôle gestion peut modifier un collaborateur.")
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise ValueError("Collaborateur non trouvé.")
+
+    if "username" in updates:
+        existing = db.query(User).filter(User.username == updates["username"]).first()
+        if existing and existing.id != user_id:
+            raise ValueError("Ce nom d'utilisateur est déjà pris.")
+        user.username = updates["username"]
+
+    if "full_name" in updates:
+        user.full_name = updates["full_name"]
+
+    if "role" in updates:
+        if updates["role"] not in ["gestion", "commercial", "support"]:
+            raise ValueError("Rôle invalide.")
+        user.role = updates["role"]
+
+    if "password" in updates:
+        user.password_hash = hash_password(updates["password"])
+
+    db.commit()
+    db.refresh(user)
+    return user
+
+
 # ======================
 # CRUD CLIENTS
 # ======================
