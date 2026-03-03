@@ -9,7 +9,7 @@ Installation
 
 Cloner le repository
 
-bashgit clone https://github.com/votre-repo/epic-events-crm.git
+
 cd epic-events-crm
 
 Creer et activer un environnement virtuel
