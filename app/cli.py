@@ -128,7 +128,6 @@ def list_clients_cmd():
         click.echo("Aucun client.")
         return
     
-    erreur_test = 10 / 0
 
     for c in clients:
         contact = c.sales_contact.full_name if c.sales_contact else "Aucun"
